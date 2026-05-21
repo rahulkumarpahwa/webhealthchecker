@@ -14,7 +14,7 @@ type Check struct {
 
 const Instances int = 2
 
-var CheckQueue = make(chan *Check, 100)
+var checkQueue = make(chan *Check, 100)
 
 func (c *Check) Checker() {
 	addr := c.Domain + ":" + c.Port
@@ -45,7 +45,7 @@ func (c *Check) Runner() {
 
 func worker(wg *sync.WaitGroup) {
 	defer wg.Done()
-	for check := range CheckQueue {
+	for check := range checkQueue {
 		check.Checker()
 	}
 }
@@ -57,9 +57,13 @@ func (c *Check) AddCheck(domain string, port string) {
 	}
 
 	select {
-	case CheckQueue <- check:
+	case checkQueue <- check:
 		fmt.Println("New Check Added in Queue!")
 	default:
 		fmt.Println("Failed to add the check!")
 	}
+}
+
+func CloseCheck()  {
+	close(checkQueue)
 }

@@ -12,6 +12,6 @@ func main() {
 	c.AddCheck("microsoft.com", "80")
 	c.AddCheck("google.com", "80")
 	c.AddCheck("rahulkumarpahwa.me", "80")
-	close(checker.CheckQueue)
+	checker.CloseCheck()
 	c.Runner()
 }
